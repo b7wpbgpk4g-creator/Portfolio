@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martin Beredo - Resume</title>
+    <meta name="description"
+        content="The resume of Martin Beredo, a creative copywriter and screenwriter studying at Syracuse University, with experience at Miirror Health, TNH Ad Agency, Midstory, and Owens Corning.">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖋️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        // Apply saved theme before paint to avoid a flash
+        (function () {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+    <style>
+        :root {
+            --paper-color: #f4f1ea;
+            --ink-color: #1a1a1a;
+            --bg-texture: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+
+        [data-theme="dark"] {
+            --paper-color: #1a1a1a;
+            --ink-color: #f4f1ea;
+            --bg-texture: url("https://www.transparenttextures.com/patterns/dark-matter.png");
+        }
+
+        body {
+            background-color: var(--paper-color);
+            background-image: var(--bg-texture);
+            font-family: 'Courier Prime', monospace;
+            color: var(--ink-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .inter-text {
+            font-family: 'Inter', sans-serif;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--paper-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--ink-color);
+            transition: all 0.3s ease;
+            user-select: none;
+            position: relative;
+            background-color: var(--paper-color);
+            display: inline-block;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.6;
+        }
+
+        .theme-toggle.moon {
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--paper-color) 25%, var(--ink-color) 25%);
+        }
+
+        .theme-toggle.sun {
+            border-radius: 50%;
+            background-color: var(--ink-color);
+            box-shadow:
+                0 -8px 0 -6px var(--ink-color),
+                0 8px 0 -6px var(--ink-color),
+                -8px 0 0 -6px var(--ink-color),
+                8px 0 0 -6px var(--ink-color),
+                -6px -6px 0 -6px var(--ink-color),
+                6px -6px 0 -6px var(--ink-color),
+                -6px 6px 0 -6px var(--ink-color),
+                6px 6px 0 -6px var(--ink-color);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 2rem 4rem;
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 2rem;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover::before {
+            content: '>';
+            position: absolute;
+            left: -1.2rem;
+        }
+
+        #name-heading {
+            cursor: pointer;
+            user-select: none;
+            transition: 0.1s;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .section-divider {
+            border-bottom: 2px solid;
+            border-color: var(--ink-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .contact-link {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: opacity 0.2s ease;
+        }
+
+        .contact-link:hover {
+            opacity: 0.6;
+        }
+
+        .dl-btn {
+            border: 2px solid var(--ink-color);
+            transition: all 0.3s ease;
+        }
+
+        .dl-btn:hover {
+            background-color: var(--ink-color);
+            color: var(--paper-color);
+        }
+
+        @media (max-width: 768px) {
+            .site-header {
+                padding: 1.5rem;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loading-screen">
+        <div class="loading-text">LOADING...</div>
+    </div>
+
+    <header class="site-header">
+        <div>
+            <h1 id="name-heading" onclick="scrambleName()" class="text-4xl font-bold uppercase tracking-[0.2em]">Martin
+                Beredo</h1>
+            <div class="mt-2">
+                <p id="subtitle-heading" onclick="cycleSubtitle()"
+                    class="text-xs italic tracking-widest uppercase">COPYWRITER</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <nav class="top-nav">
+                <a href="index.html" onclick="navigateTo('index.html', event)" class="nav-link font-normal">WORK</a>
+                <a href="Play_section.html" onclick="navigateTo('Play_section.html', event)"
+                    class="nav-link font-normal">PLAY</a>
+                <a href="about.html" onclick="navigateTo('about.html', event)" class="nav-link font-normal">ABOUT</a>
+                <a href="resume.html"
+                    class="nav-link font-bold underline decoration-2 underline-offset-8">RESUME</a>
+            </nav>
+            <span class="theme-toggle moon" onclick="toggleTheme()" title="Toggle theme"></span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 md:px-16 pt-2 pb-20">
+
+        <!-- Contact -->
+        <p class="text-center text-sm md:text-base mb-12 leading-relaxed">
+            Syracuse, NY
+            <span class="opacity-40 mx-2">/</span>
+            <a href="tel:+15677021092" class="contact-link">(567) 702-1092</a>
+            <span class="opacity-40 mx-2">/</span>
+            <a href="mailto:mjberedo@syr.edu" class="contact-link">mjberedo@syr.edu</a>
+            <span class="opacity-40 mx-2">/</span>
+            <a href="https://martinberedo.com" class="contact-link">martinberedo.com</a>
+        </p>
+
+        <!-- Education -->
+        <section class="mb-14">
+            <h3 class="font-bold uppercase tracking-widest text-sm section-divider">Education</h3>
+            <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+                <h4 class="text-lg md:text-xl font-bold uppercase">Syracuse University</h4>
+                <span class="text-xs italic opacity-70">2022 &ndash; Present</span>
+            </div>
+            <div class="mt-3 inter-text text-sm md:text-base leading-relaxed space-y-1">
+                <p>B.S. Creative Advertising &mdash; Newhouse School of Public Communications</p>
+                <p>Minor, Data Analytics &mdash; School of Information Studies</p>
+                <p class="opacity-80 pt-1">Activities: Basketball Analytics Club &middot; Z89 Radio &middot; Kappa Theta
+                    Pi Professional Technology Fraternity</p>
+            </div>
+        </section>
+
+        <!-- Experience -->
+        <section class="mb-14">
+            <h3 class="font-bold uppercase tracking-widest text-sm section-divider">Experience</h3>
+            <div class="space-y-10">
+
+                <div>
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+                        <h4 class="text-lg md:text-xl font-bold uppercase">Social Media Manager
+                            <span class="font-normal normal-case text-base opacity-80">&mdash; Miirror Health, Syracuse,
+                                NY</span>
+                        </h4>
+                        <span class="text-xs italic opacity-70 whitespace-nowrap">Nov 2025 &ndash; Present</span>
+                    </div>
+                    <ul class="mt-3 space-y-2 list-disc pl-5 inter-text text-sm md:text-base leading-relaxed">
+                        <li>Established Brand Identity Guidelines and visual assets, including logo design and core
+                            typography, for a health-tech startup.</li>
+                        <li>Engineered organic growth strategies for Instagram and LinkedIn, generating 10,529 profile
+                            impressions and 1,550+ profile visits without paid spend.</li>
+                        <li>Managed a multi-channel content calendar, driving 268 external link conversions through
+                            targeted copy and aesthetic graphics.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+                        <h4 class="text-lg md:text-xl font-bold uppercase">Copywriter
+                            <span class="font-normal normal-case text-base opacity-80">&mdash; TNH Ad Agency, Syracuse,
+                                NY</span>
+                        </h4>
+                        <span class="text-xs italic opacity-70 whitespace-nowrap">Sep 2025 &ndash; Dec 2025</span>
+                    </div>
+                    <ul class="mt-3 space-y-2 list-disc pl-5 inter-text text-sm md:text-base leading-relaxed">
+                        <li>Spearheaded a full-scale marketing campaign for a local bakery, Sweets for Babe, to address
+                            limited brand awareness and low digital visibility.</li>
+                        <li>Orchestrated an influencer marketing strategy with local creators, resulting in a TikTok
+                            campaign reaching 45,000+ views and 5,000+ likes.</li>
+                        <li>Produced 100+ multimedia deliverables, including high-conversion social video, photography,
+                            and custom branded banners to drive foot traffic.</li>
+                        <li>Increased social following by 25% and in-store visits by 20%.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+                        <h4 class="text-lg md:text-xl font-bold uppercase">Creative Intern
+                            <span class="font-normal normal-case text-base opacity-80">&mdash; Midstory, Toledo,
+                                OH</span>
+                        </h4>
+                        <span class="text-xs italic opacity-70 whitespace-nowrap">Jun 2025 &ndash; Sep 2025</span>
+                    </div>
+                    <ul class="mt-3 space-y-2 list-disc pl-5 inter-text text-sm md:text-base leading-relaxed">
+                        <li>Wrote a feature article about Detroit&rsquo;s Olympic history.</li>
+                        <li>Hosted, wrote, and conducted interviews for &ldquo;Brain Drain,&rdquo; a podcast about Toledo,
+                            Ohio.</li>
+                        <li>Coded and published data visualizations for several nonfiction projects.</li>
+                        <li>Created social content increasing traffic to Midstory&rsquo;s in-person location and website
+                            by 20%.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-baseline">
+                        <h4 class="text-lg md:text-xl font-bold uppercase">Marketing Intern
+                            <span class="font-normal normal-case text-base opacity-80">&mdash; Owens Corning, Toledo,
+                                OH</span>
+                        </h4>
+                        <span class="text-xs italic opacity-70 whitespace-nowrap">Apr 2024 &ndash; Aug 2024</span>
+                    </div>
+                    <ul class="mt-3 space-y-2 list-disc pl-5 inter-text text-sm md:text-base leading-relaxed">
+                        <li>Wrote copy for social posts.</li>
+                        <li>Directed and edited professional video assets (handheld and drone) for cross-platform
+                            corporate storytelling.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="mb-16">
+            <h3 class="font-bold uppercase tracking-widest text-sm section-divider">Skills</h3>
+            <div class="inter-text text-sm md:text-base leading-relaxed space-y-2">
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Screenwriting:</span>
+                    Wrote four feature-length film scripts.</p>
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Adobe:</span>
+                    Premiere Pro, Photoshop, Audition, InDesign.</p>
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Microsoft:</span>
+                    Excel (Certified), Teams, PowerPoint.</p>
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Social
+                        Media:</span> X, Instagram, TikTok, YouTube, LinkedIn.</p>
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Programming:</span>
+                    SQL Server, RStudio, Python.</p>
+                <p><span class="font-bold uppercase tracking-wide" style="font-family:'Courier Prime',monospace;">Languages:</span>
+                    Spanish (Professional Working Proficiency).</p>
+            </div>
+        </section>
+
+        <!-- Download -->
+        <div class="text-center">
+            <a href="2026_Resume_MartinBeredo.pdf" download
+                class="dl-btn inline-block font-bold uppercase tracking-[0.2em] px-8 py-4 text-sm md:text-base">Download
+                Resume (PDF)</a>
+        </div>
+
+    </main>
+
+    <script>
+        function updateThemeIcon() {
+            const tog = document.querySelector('.theme-toggle');
+            if (!tog) return;
+            const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+            tog.classList.toggle('sun', dark);
+            tog.classList.toggle('moon', !dark);
+        }
+
+        function toggleTheme() {
+            const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeIcon();
+        }
+
+        function navigateTo(page, event) {
+            if (event) event.preventDefault();
+            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.opacity = '0';
+            setTimeout(() => { window.location.href = page; }, 300);
+        }
+
+        const subtitleRoles = ["COPYWRITER", "/SCREENWRITER", "/AUTHOR", "/DATA ANALYST", "/PODCASTER", "/STAND-UP COMEDIAN", "/AMATEUR CHEF", "/FUTURE SEXIEST MAN ALIVE", "/LIFE OF THE PARTY", "/NOT YOUR AVERAGE JOE"];
+        let roleIndex = 0;
+        function cycleSubtitle() {
+            roleIndex = (roleIndex + 1) % subtitleRoles.length;
+            const s = document.getElementById('subtitle-heading');
+            if (roleIndex === 0) s.innerHTML = subtitleRoles[0];
+            else s.innerHTML += `<span>${subtitleRoles[roleIndex]}</span>`;
+        }
+
+        function scrambleName() {
+            const el = document.getElementById('name-heading');
+            const rect = el.getBoundingClientRect();
+            if (window.confetti) {
+                confetti({
+                    particleCount: 120,
+                    spread: 70,
+                    origin: {
+                        x: (rect.left + rect.width / 2) / window.innerWidth,
+                        y: (rect.top + rect.height / 2) / window.innerHeight
+                    }
+                });
+            }
+        }
+
+        updateThemeIcon();
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const ls = document.getElementById('loading-screen');
+                ls.classList.add('fade-out');
+                setTimeout(() => { ls.style.display = 'none'; }, 500);
+            }, 200);
+        });
+    </script>
+</body>
+
+</html>
