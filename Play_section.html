@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martin Beredo - Play: Screenplays, Podcasts & More</title>
+    <meta name="description" content="Explore Martin Beredo's creative side projects including screenplays like 'Recalling Violence', podcasts 'Bounce N' Banter' and 'Brain Drain', and self-published writing on Substack.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖋️</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Bungee+Spice&family=Monoton&family=Ewert&family=Creepster&family=Special+Elite&family=Slackey&family=Permanent+Marker&family=UnifrakturMaguntia&family=Nosifer&family=Piedra&family=Metal+Mania&family=Henny+Penny&family=Shojumaru&family=Gloria+Hallelujah&family=Bangers&family=Fredericka+the+Great&family=Finger+Paint&family=Frijole&family=Eater&family=Cabin+Sketch&family=Arizonia&family=Codystar&family=Rubik+Moonrocks&family=Rubik+Burned&family=Rubik+Glitch&family=Fascinate+Inline&family=Londrina+Sketch&family=Rye&family=Black+Ops+One&family=Staatliches&family=Faster+One&family=Audiowide&family=Bungee+Shade&family=Flavors&family=Rubik+Spray+Paint&family=Jolly+Lodger&family=New+Rocker&family=Butcherman&family=Fontdiner+Swanky&family=Jacques+Francois+Shadow&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #f4f1ea;
+            --ink-color: #1a1a1a;
+            --bg-texture: url("https://www.transparenttextures.com/patterns/felt.png");
+        }
+        
+        [data-theme="dark"] {
+            --paper-color: #1a1a1a;
+            --ink-color: #f4f1ea;
+            --bg-texture: url("https://www.transparenttextures.com/patterns/dark-matter.png");
+        }
+        
+        body { 
+            background-color: var(--paper-color);
+            background-image: var(--bg-texture);
+            font-family: 'Courier Prime', monospace;
+            color: var(--ink-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--paper-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--ink-color);
+            transition: all 0.3s ease;
+            user-select: none;
+            position: relative;
+            background-color: var(--paper-color);
+            display: inline-block;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.6;
+        }
+
+        /* Moon icon - filled circle with cutout */
+        .theme-toggle.moon {
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--paper-color) 25%, var(--ink-color) 25%);
+        }
+
+        /* Sun icon - circle with short lines around it */
+        .theme-toggle.sun {
+            border-radius: 50%;
+            background-color: var(--ink-color);
+            box-shadow: 
+                0 -8px 0 -6px var(--ink-color),
+                0 8px 0 -6px var(--ink-color),
+                -8px 0 0 -6px var(--ink-color),
+                8px 0 0 -6px var(--ink-color),
+                -6px -6px 0 -6px var(--ink-color),
+                6px -6px 0 -6px var(--ink-color),
+                -6px 6px 0 -6px var(--ink-color),
+                6px 6px 0 -6px var(--ink-color);
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 2rem 4rem;
+            width: 100%;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 2rem;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.2s;
+        }
+        .nav-link:hover::before {
+            content: '>';
+            position: absolute;
+            left: -1.2rem;
+        }
+
+        .section-divider {
+            border-bottom: 2px solid;
+            border-color: var(--ink-color);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+        }
+
+        #name-heading { 
+            cursor: pointer; 
+            user-select: none; 
+            transition: 0.1s; 
+            display: inline-block; 
+            text-align: left;
+            position: relative;
+        }
+
+        @keyframes shatter {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) rotate(var(--r)); opacity: 0; }
+        }
+
+        @keyframes rebuild {
+            0% { transform: translate(var(--tx), var(--ty)) rotate(var(--r)); opacity: 0; }
+            100% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes subtlePulse {
+            0% { opacity: 1; text-shadow: none; }
+            50% { opacity: 0.8; text-shadow: 0 0 12px currentColor; }
+            100% { opacity: 1; text-shadow: none; }
+        }
+
+        .easter-egg-hint {
+            animation: subtlePulse 3s infinite ease-in-out;
+        }
+        
+        .easter-egg-hint:hover {
+            animation: none;
+        }
+
+        @keyframes wiggle {
+            0%, 90% { transform: translate(0, 0) rotate(0deg); }
+            92% { transform: translate(-1px, 0px) rotate(-3deg); }
+            94% { transform: translate(1px, -1px) rotate(4deg); }
+            96% { transform: translate(-1px, 1px) rotate(-4deg); }
+            98% { transform: translate(1px, 1px) rotate(3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .wiggle-letter {
+            display: inline-block;
+            animation: wiggle infinite ease-in-out;
+        }
+
+        @keyframes spinDisappear {
+            0% { transform: rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: rotate(720deg) scale(0); opacity: 0; }
+        }
+        @keyframes spinReappear {
+            0% { transform: rotate(720deg) scale(0); opacity: 0; }
+            100% { transform: rotate(0deg) scale(1); opacity: 1; }
+        }
+        @keyframes waveEffect {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .inter-text {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: normal;
+        }
+
+        @keyframes neonFlicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { 
+                opacity: 1; 
+                text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+            }
+            20%, 24%, 55% { 
+                opacity: 0.4; 
+                text-shadow: none;
+            }
+        }
+
+        @keyframes gravityDrop {
+            0% { transform: translateY(-200px) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(0) rotate(180deg); opacity: 1; }
+            65% { transform: translateY(-30px) rotate(200deg); }
+            80% { transform: translateY(0) rotate(340deg); }
+            90% { transform: translateY(-10px) rotate(355deg); }
+            100% { transform: translateY(0) rotate(360deg); opacity: 1; }
+        }
+
+        @keyframes elasticBounce {
+            0% { transform: scale(1, 1); }
+            25% { transform: scale(1.2, 0.8); }
+            50% { transform: scale(0.8, 1.2); }
+            75% { transform: scale(1.1, 0.9); }
+            100% { transform: scale(1, 1); }
+        }
+
+        @keyframes magneticPull {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: trailFade 0.8s ease-out forwards;
+        }
+
+        @keyframes trailFade {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+        #subtitle-heading { cursor: pointer; display: inline-block; line-height: 1.4; text-align: left; max-width: 900px; }
+        .no-wrap { white-space: nowrap; }
+
+        .typewriter-line { display: block; min-height: 1.6em; }
+
+        .play-content-item { margin-bottom: 6rem; text-align: center; }
+
+        .basketball-emoji {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .basketball-emoji:hover {
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            25% { transform: translateY(-20px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .site-header {
+                flex-direction: column;
+                padding: 1.5rem 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .top-nav {
+                gap: 1.5rem;
+                font-size: 0.75rem;
+            }
+
+            .nav-link:hover::before {
+                left: -0.8rem;
+            }
+
+            #name-heading {
+                font-size: 1.75rem;
+            }
+
+            #subtitle-heading {
+                font-size: 0.65rem;
+            }
+
+            .play-content-item {
+                margin-bottom: 4rem;
+            }
+
+            .section-divider {
+                margin-bottom: 1.5rem;
+            }
+
+            .loading-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="loading-text">LOADING...</div>
+    </div>
+
+    <header class="site-header">
+        <div>
+            <h1 id="name-heading" onclick="scrambleName()" class="text-4xl font-bold uppercase tracking-[0.2em]">Martin Beredo</h1>
+            <div class="mt-2"><p id="subtitle-heading" onclick="cycleSubtitle()" class="text-xs italic tracking-widest uppercase">COPYWRITER</p></div>
+        </div>
+        <div class="header-right">
+            <nav class="top-nav">
+                <a href="index.html" onclick="navigateTo('index.html', event)" class="nav-link font-normal">WORK</a>
+                <a href="Play_section.html" onclick="navigateTo('Play_section.html', event)" class="nav-link font-bold underline decoration-2 underline-offset-8">PLAY</a>
+                <a href="about.html" onclick="navigateTo('about.html', event)" class="nav-link font-normal">ABOUT</a>
+                <a href="2026_Resume_MartinBeredo.pdf" target="_blank" class="nav-link font-normal opacity-70 hover:opacity-100 transition-opacity">RESUME</a>
+            </nav>
+            <span class="theme-toggle moon" onclick="toggleTheme()" title="Toggle theme"></span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-8 md:px-16 pt-2 pb-12">
+        <div class="mb-8 text-center text-lg md:text-xl lg:text-3xl font-normal uppercase tracking-tighter leading-tight">
+            <span id="line1" class="typewriter-line"></span>
+            <span id="line2" class="typewriter-line"></span>
+        </div>
+
+        <section class="play-content-item">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Screenplays</h3>
+            <p class="text-sm italic mb-10 opacity-70 text-center">I wrote all three of these screenplays with my good friend and co-writer Andrew Niebel.</p>
+            
+            <div class="space-y-16 max-w-2xl mx-auto">
+                <div>
+                    <h4 class="text-xl md:text-2xl font-bold uppercase">Recalling Violence</h4>
+                    <p class="text-base md:text-lg leading-relaxed mt-2 mb-6 inter-text">"In the summer of 1948, two ex-convicts seek revenge on an abusive prison guard. The tragic end to their buddy comedy is recalled in court, where the line between justice and spectacle is blurred."</p>
+                    <a href="Recalling Violence.pdf" target="_blank" class="font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-white transition px-1" style="border-color: var(--ink-color);">Read Script</a>
+                </div>
+
+                <div>
+                    <h4 class="text-xl md:text-2xl font-bold uppercase">Untitled College Script</h4>
+                    <p class="text-base md:text-lg leading-relaxed mt-2 mb-6 inter-text">An incredibly angsty film I wrote during my freshman year of college about an angsty college freshman trying to make art.</p>
+                    <a href="Untitled College Script.pdf" target="_blank" class="font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-white transition px-1" style="border-color: var(--ink-color);">Read Script</a>
+                </div>
+
+                <div>
+                    <h4 class="text-xl md:text-2xl font-bold uppercase">The Gangster, The Cop, and The Cowboy</h4>
+                    <p class="text-base md:text-lg leading-relaxed mt-2 mb-6 inter-text">A gangster short film I wrote and attempted to produce in high school.</p>
+                    <a href="The Gangster, The Cop, and The Cowboy.pdf" target="_blank" class="font-bold uppercase tracking-widest border-b-2 border-black hover:bg-black hover:text-white transition px-1" style="border-color: var(--ink-color);">Read Script</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="play-content-item">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Podcasts</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 justify-items-center">
+                <div class="flex flex-col items-center">
+                    <h4 class="text-lg md:text-xl font-bold uppercase mb-6">Bounce N' Banter</h4>
+                    <a href="https://open.spotify.com/show/3HBlXXn5DiOOWRNYxtuzHb" target="_blank" class="hover:scale-105 transition-transform duration-300">
+                        <img src="Black Orange White Professional Concept Basketball Team Logo.jpg" alt="Bounce N' Banter" class="w-48 h-48 md:w-56 md:h-56 rounded-full border border-black/10 shadow-lg object-cover" loading="lazy">
+                    </a>
+                </div>
+                <div class="flex flex-col items-center">
+                    <h4 class="text-lg md:text-xl font-bold uppercase mb-6">Brain Drain</h4>
+                    <a href="https://www.midstory.org/braindrain/" target="_blank" class="hover:scale-105 transition-transform duration-300">
+                        <img src="brain-drain-high-res-web-version-1.png" alt="Brain Drain" class="w-48 h-48 md:w-56 md:h-56 rounded-full border border-black/10 shadow-lg object-cover" loading="lazy">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="play-content-item text-center">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Basketball Highlight Tape</h3>
+            <a href="https://www.youtube.com/watch?v=ftqMiTOp_0E" target="_blank">
+                <span class="text-7xl md:text-9xl basketball-emoji">🏀</span>
+            </a>
+        </section>
+
+        <section class="play-content-item text-center">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Self-Published Writing</h3>
+            <a href="https://substack.com/@martinberedo" target="_blank" class="font-bold uppercase tracking-[0.3em] border-2 px-6 md:px-10 py-3 md:py-4 hover:opacity-80 transition duration-300 text-xs md:text-base" style="border-color: var(--ink-color);">self-published writing</a>
+        </section>
+
+        <section class="play-content-item text-center">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Other-Published Writing</h3>
+            <a href="https://www.midstory.org/the-tragedy-behind-detroits-nine-failed-olympic-bids/" target="_blank" class="font-bold uppercase tracking-[0.3em] border-2 px-6 md:px-10 py-3 md:py-4 hover:opacity-80 transition duration-300 text-xs md:text-base" style="border-color: var(--ink-color);">other-published writing</a>
+        </section>
+
+        <section class="play-content-item text-center">
+            <h3 class="font-bold uppercase tracking-widest text-sm mb-8 section-divider">Interactive Experience</h3>
+            <a href="https://fragrant-queen-0f40.mjberedo.workers.dev" target="_blank" class="font-bold uppercase tracking-[0.3em] border-2 px-6 md:px-10 py-3 md:py-4 hover:opacity-80 transition duration-300 text-xs md:text-base" style="border-color: var(--ink-color);">THE TOUSE GAUNTLET</a>
+        </section>
+    </main>
+
+    <script>
+        // Theme management
+        const getTheme = () => localStorage.getItem('theme') || 'light';
+        const setTheme = (theme) => {
+            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-theme', theme);
+            updateThemeIcon();
+        };
+
+        const originalNameText = "Martin Beredo";
+        let currentScrambledColors = null;
+
+        function applyWiggleToName() {
+            const el = document.getElementById('name-heading');
+            if (!el) return;
+            el.innerHTML = originalNameText.split('').map((char, i) => {
+                if (char === ' ') return ' ';
+                const color = currentScrambledColors ? currentScrambledColors[i] : 'inherit';
+                const delay = (Math.random() * -15).toFixed(2);
+                const duration = (5 + Math.random() * 10).toFixed(2);
+                return `<span class="wiggle-letter" style="color:${color}; animation-delay: ${delay}s; animation-duration: ${duration}s;">${char}</span>`;
+            }).join('');
+        }
+        window.addEventListener('DOMContentLoaded', applyWiggleToName);
+        
+        function updateThemeIcon() {
+            const toggle = document.querySelector('.theme-toggle');
+            if (toggle) {
+                const currentTheme = getTheme();
+                toggle.className = 'theme-toggle ' + (currentTheme === 'light' ? 'moon' : 'sun');
+            }
+        }
+
+        function toggleTheme() {
+            const current = getTheme();
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function navigateTo(url, e) {
+            if (e) e.preventDefault();
+            const loader = document.getElementById('loading-screen');
+            loader.style.display = 'flex';
+            // Force reflow
+            void loader.offsetWidth;
+            loader.classList.remove('fade-out');
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Apply saved theme immediately
+        setTheme(getTheme());
+
+        const text1 = "All work and no play makes Marty a dull boy.";
+        const text2 = "All play and no work makes Marty unemployed.";
+        
+        function typeWriter(text, elementId, delayAfter = 0) {
+            return new Promise(resolve => {
+                let i = 0;
+                const element = document.getElementById(elementId);
+                element.innerHTML = '';
+                
+                function type() {
+                    if (i < text.length) {
+                        element.insertAdjacentHTML('beforeend', text.charAt(i));
+                        i++;
+                        // Variable speed: 20-80ms per character
+                        setTimeout(type, Math.floor(Math.random() * 60) + 20);
+                    } else {
+                        setTimeout(resolve, delayAfter);
+                    }
+                }
+                type();
+            });
+        }
+
+        // Hide loading screen immediately when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('fade-out');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                }, 500);
+            }, 300);
+        });
+
+        // Start typewriter effect independently
+        window.addEventListener('load', async () => {
+            await typeWriter(text1, 'line1', 300);
+            await typeWriter(text2, 'line2');
+        });
+
+        const brightColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FF4500', '#32CD32', '#1E90FF', '#FFD700', '#8A2BE2', '#FF69B4'];
+        const crazyFonts = ['Bungee Spice', 'Monoton', 'Ewert', 'Creepster', 'Special Elite', 'Slackey', 'Permanent Marker', 'UnifrakturMaguntia', 'Nosifer', 'Piedra', 'Metal Mania', 'Henny Penny', 'Shojumaru', 'Gloria Hallelujah', 'Bangers', 'Fredericka the Great', 'Finger Paint', 'Frijole', 'Eater', 'Cabin Sketch', 'Arizonia', 'Codystar', 'Rubik Moonrocks', 'Rubik Burned', 'Rubik Glitch', 'Fascinate Inline', 'Londrina Sketch', 'Rye', 'Black Ops One', 'Staatliches', 'Faster One', 'Audiowide', 'Bungee Shade', 'Flavors', 'Rubik Spray Paint', 'Jolly Lodger', 'New Rocker', 'Butcherman', 'Fontdiner Swanky', 'Jacques Francois Shadow'];
+
+        function shatterEffect(el) {
+            const text = el.textContent;
+            el.innerHTML = '';
+            const letters = text.split('');
+            letters.forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.setProperty('--tx', `${(Math.random() - 0.5) * 400}px`);
+                span.style.setProperty('--ty', `${(Math.random() - 0.5) * 400}px`);
+                span.style.setProperty('--r', `${Math.random() * 720 - 360}deg`);
+                span.style.animation = 'shatter 0.6s ease-out forwards';
+                el.appendChild(span);
+            });
+            setTimeout(() => {
+                el.querySelectorAll('span').forEach(span => {
+                    span.style.animation = 'rebuild 0.6s ease-out forwards';
+                });
+            }, 600);
+        }
+
+        function neonFlickerEffect(el) {
+            el.style.animation = 'neonFlicker 1.5s ease-in-out';
+            setTimeout(() => el.style.animation = '', 1500);
+        }
+
+        function gravityDropEffect(el) {
+            const text = el.textContent;
+            el.innerHTML = '';
+            text.split('').forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.animation = `gravityDrop 1s ease-out ${i * 0.05}s both`;
+                el.appendChild(span);
+            });
+        }
+
+        function elasticBounceEffect(el) {
+            el.style.animation = 'elasticBounce 0.8s ease-in-out';
+            setTimeout(() => el.style.animation = '', 800);
+        }
+
+        function magneticPullEffect(el) {
+            const text = el.textContent;
+            el.innerHTML = '';
+            text.split('').forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.animation = `magneticPull 0.6s ease-in-out ${i * 0.05}s`;
+                el.appendChild(span);
+            });
+        }
+
+        function typewriterEffect(el, text, font, colors) {
+            el.innerHTML = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < text.length) {
+                    if (text[i] === ' ') {
+                        el.appendChild(document.createTextNode(' '));
+                    } else {
+                        const span = document.createElement('span');
+                        span.textContent = text[i];
+                        span.style.color = colors[i % colors.length];
+                        el.appendChild(span);
+                    }
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 50);
+        }
+
+        function explosionRebuildEffect(el) {
+            const text = el.textContent;
+            const colors = text.split('').map(() => brightColors[Math.floor(Math.random() * brightColors.length)]);
+            el.innerHTML = '';
+            
+            text.split('').forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.color = colors[i];
+                span.style.setProperty('--tx', `${(Math.random() - 0.5) * 600}px`);
+                span.style.setProperty('--ty', `${(Math.random() - 0.5) * 600}px`);
+                span.style.setProperty('--r', `${Math.random() * 1080}deg`);
+                span.style.animation = 'shatter 0.8s ease-out forwards';
+                el.appendChild(span);
+            });
+
+            setTimeout(() => {
+                el.querySelectorAll('span').forEach((span, i) => {
+                    span.style.animation = 'rebuild 1s ease-out forwards';
+                    span.style.animationDelay = `${i * 0.05}s`;
+                });
+            }, 800);
+        }
+        
+        const subtitleRoles = ["COPYWRITER", "/SCREENWRITER", "/AUTHOR", "/DATA ANALYST", "/PODCASTER", "/STAND-UP COMEDIAN", "/AMATEUR CHEF", "/STAR OF ST. ROSE ELEMENTARY'S 2017 SMASH-HIT, SOLD-OUT PRODUCTION \"ANNIE JR\"", "/FUTURE SEXIEST MAN ALIVE", "/LIFE OF THE PARTY", "/NOT YOUR AVERAGE JOE"];
+        let roleIndex = 0;
+
+        function cycleSubtitle() {
+            roleIndex = (roleIndex + 1) % subtitleRoles.length;
+            const subtitle = document.getElementById('subtitle-heading');
+            if (roleIndex === 0) {
+                subtitle.innerHTML = subtitleRoles[0];
+            } else {
+                const isJoe = subtitleRoles[roleIndex] === "/NOT YOUR AVERAGE JOE";
+                subtitle.innerHTML += `<span class="${isJoe ? 'no-wrap' : ''}">${subtitleRoles[roleIndex]}</span>`;
+            }
+        }
+
+        function spinDisappearEffect(el) {
+            const text = el.textContent;
+            el.innerHTML = '';
+            text.split('').forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.animation = `spinDisappear 1s ease-in-out ${i * 0.05}s forwards`;
+                el.appendChild(span);
+            });
+            setTimeout(() => {
+                el.querySelectorAll('span').forEach((span, i) => {
+                    span.style.animation = `spinReappear 1s ease-in-out ${i * 0.05}s forwards`;
+                });
+            }, 1000);
+        }
+
+        function waveEffect(el) {
+            const text = el.textContent;
+            el.innerHTML = '';
+            text.split('').forEach((char, i) => {
+                if (char === ' ') { el.appendChild(document.createTextNode(' ')); return; }
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.display = 'inline-block';
+                span.style.animation = `waveEffect 1s ease-in-out ${i * 0.1}s`;
+                el.appendChild(span);
+            });
+        }
+
+        function scrambleName() {
+            const el = document.getElementById('name-heading');
+            
+            currentScrambledColors = originalNameText.split('').map(char => 
+                char === ' ' ? 'transparent' : brightColors[Math.floor(Math.random() * brightColors.length)]
+            );
+
+            el.textContent = originalNameText;
+
+            const effects = [
+                () => {
+                    el.innerHTML = originalNameText.split('').map((char, i) => 
+                        char === ' ' ? ' ' : `<span style="color:${currentScrambledColors[i]}">${char}</span>`
+                    ).join('');
+                },
+                () => shatterEffect(el),
+                () => neonFlickerEffect(el),
+                () => gravityDropEffect(el),
+                () => elasticBounceEffect(el),
+                () => magneticPullEffect(el),
+                () => typewriterEffect(el, originalNameText, '', currentScrambledColors),
+                () => explosionRebuildEffect(el),
+                () => spinDisappearEffect(el),
+                () => waveEffect(el)
+            ];
+
+            const effect = effects[Math.floor(Math.random() * effects.length)];
+            effect();
+
+            // Apply colors to any effect that creates spans
+            setTimeout(() => {
+                el.querySelectorAll('span').forEach((span, i) => {
+                    if (span.textContent !== ' ') {
+                        span.style.color = currentScrambledColors[i % currentScrambledColors.length];
+                    }
+                });
+            }, 50);
+
+            const rect = el.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2) / window.innerWidth;
+            const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+            const modes = ['script', 'movie', 'fire', 'explosion', 'standard'];
+            const mode = modes[Math.floor(Math.random() * modes.length)];
+            
+            if (mode === 'script') {
+                const scalar = 2;
+                const pen = confetti.shapeFromText({ text: '🖋️', scalar });
+                const paper = confetti.shapeFromText({ text: '📄', scalar });
+                confetti({ shapes: [pen, paper], particleCount: 40, origin: { x, y }, spread: 90, gravity: 0.8 });
+            } else if (mode === 'movie') {
+                const scalar = 2;
+                const reel = confetti.shapeFromText({ text: '🎞️', scalar });
+                const star = confetti.shapeFromText({ text: '🎬', scalar });
+                confetti({ shapes: [reel, star], particleCount: 40, origin: { x, y }, spread: 180 });
+            } else if (mode === 'fire') {
+                confetti({ particleCount: 150, spread: 60, origin: { x, y }, colors: ['#ff4500', '#ff8c00', '#ff0000'], gravity: 0.5, startVelocity: 45 });
+            } else if (mode === 'explosion') {
+                confetti({ particleCount: 200, spread: 160, startVelocity: 60, origin: { x, y }, colors: brightColors });
+            } else {
+                confetti({ particleCount: 150, spread: 70, origin: { x, y }, colors: brightColors });
+            }
+
+            // Keep the colorful state permanently - don't reset
+            setTimeout(() => {
+                el.style.animation = '';
+                // Apply final colored state with wiggle
+                el.innerHTML = originalNameText.split('').map((char, i) => {
+                    if (char === ' ') return ' ';
+                    const delay = (Math.random() * -15).toFixed(2);
+                    const duration = (5 + Math.random() * 10).toFixed(2);
+                    return `<span class="wiggle-letter" style="color:${currentScrambledColors[i]}; animation-delay: ${delay}s; animation-duration: ${duration}s;">${char}</span>`;
+                }).join('');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
