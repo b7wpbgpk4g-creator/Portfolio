@@ -564,8 +564,7 @@
                     class="nav-link font-normal">PLAY</a>
                 <a href="about.html" onclick="navigateTo('about.html', event)"
                     class="nav-link font-bold underline decoration-2 underline-offset-8">ABOUT</a>
-                <a href="resume.html" onclick="navigateTo('resume.html', event)"
-                    class="nav-link font-normal">RESUME</a>
+                <a href="resume.html" onclick="navigateTo('resume.html', event)" class="nav-link font-normal">RESUME</a>
             </nav>
             <span class="theme-toggle moon" onclick="toggleTheme()" title="Toggle theme"></span>
         </div>
@@ -591,9 +590,15 @@
                     <h2 class="font-bold uppercase tracking-widest text-sm mb-4 section-divider">Experience</h2>
 
                     <div class="mb-4">
+                        <p class="text-base">RAD Amplify</p>
+                        <p class="font-bold uppercase text-base">Creator Intern</p>
+                        <p class="text-xs italic opacity-70">June 2026 - Present</p>
+                    </div>
+
+                    <div class="mb-4">
                         <p class="text-base">Miirror Health</p>
                         <p class="font-bold uppercase text-base">Social Media Manager</p>
-                        <p class="text-xs italic opacity-70">Nov 2025 - Present</p>
+                        <p class="text-xs italic opacity-70">Nov 2025 - June 2026</p>
                     </div>
 
                     <div class="mb-4">
@@ -972,10 +977,9 @@
 
             // Apply colors to any effect that creates spans
             setTimeout(() => {
+                const letterColors = currentScrambledColors.filter((c, idx) => originalNameText[idx] !== ' ');
                 el.querySelectorAll('span').forEach((span, i) => {
-                    if (span.textContent !== ' ') {
-                        span.style.color = currentScrambledColors[i % currentScrambledColors.length];
-                    }
+                    span.style.color = letterColors[i % letterColors.length];
                 });
             }, 50);
 
