@@ -330,6 +330,17 @@
             animation: wiggle infinite ease-in-out;
         }
 
+        .name-letter {
+            display: inline-block;
+        }
+
+        @keyframes nameWave {
+            0% { transform: translateY(0); }
+            30% { transform: translateY(-0.4em); }
+            65% { transform: translateY(0.15em); }
+            100% { transform: translateY(0); }
+        }
+
         @keyframes spinDisappear {
             0% {
                 transform: rotate(0deg) scale(1);
@@ -677,13 +688,9 @@
         let currentScrambledColors = null;
 
         function getWiggledNameHTML() {
-            return originalNameText.split('').map((char, i) => {
-                if (char === ' ') return ' ';
-                const color = currentScrambledColors ? currentScrambledColors[i] : 'inherit';
-                const delay = (Math.random() * -15).toFixed(2);
-                const duration = (5 + Math.random() * 10).toFixed(2);
-                return `<span class="wiggle-letter" style="color:${color}; animation-delay: ${delay}s; animation-duration: ${duration}s;">${char}</span>`;
-            }).join('');
+            return originalNameText.split('').map(char =>
+                char === ' ' ? ' ' : `<span class="name-letter">${char}</span>`
+            ).join('');
         }
 
         const crazyFonts = ['Bungee Spice', 'Monoton', 'Ewert', 'Creepster', 'Special Elite', 'Slackey', 'Permanent Marker', 'UnifrakturMaguntia', 'Nosifer', 'Piedra', 'Metal Mania', 'Henny Penny', 'Shojumaru', 'Gloria Hallelujah', 'Bangers', 'Fredericka the Great', 'Finger Paint', 'Frijole', 'Eater', 'Cabin Sketch', 'Arizonia', 'Codystar', 'Rubik Moonrocks', 'Rubik Burned', 'Rubik Glitch', 'Fascinate Inline', 'Londrina Sketch', 'Rye', 'Black Ops One', 'Staatliches', 'Faster One', 'Audiowide', 'Bungee Shade', 'Flavors', 'Rubik Spray Paint', 'Jolly Lodger', 'New Rocker', 'Butcherman', 'Fontdiner Swanky', 'Jacques Francois Shadow'];
@@ -837,55 +844,36 @@
 
         function scrambleName() {
             const el = document.getElementById('name-heading');
+            if (!el) return;
 
-            // Re-assign colors
-            currentScrambledColors = originalNameText.split('').map(char =>
-                char === ' ' ? 'transparent' : brightColors[Math.floor(Math.random() * brightColors.length)]
-            );
+            // Split the name into per-letter spans once.
+            if (!el.querySelector('.name-letter')) {
+                const text = (el.dataset.name || el.textContent || '').replace(/\s+/g, ' ').trim();
+                el.dataset.name = text;
+                el.innerHTML = text.split('').map(ch =>
+                    ch === ' ' ? ' ' : `<span class="name-letter">${ch}</span>`
+                ).join('');
+            }
 
-            el.textContent = originalNameText;
-
-            const effects = [
-                () => {
-                    el.innerHTML = originalNameText.split('').map((char, i) =>
-                        char === ' ' ? ' ' : `<span style="color:${currentScrambledColors[i]}">${char}</span>`
-                    ).join('');
-                },
-                () => shatterEffect(el),
-                () => neonFlickerEffect(el),
-                () => gravityDropEffect(el),
-                () => elasticBounceEffect(el),
-                () => magneticPullEffect(el),
-                () => typewriterEffect(el, originalNameText, '', currentScrambledColors),
-                () => explosionRebuildEffect(el),
-                () => spinDisappearEffect(el),
-                () => waveEffect(el)
-            ];
-
-            effects[Math.floor(Math.random() * effects.length)]();
-            activateCursorTrail();
-
-            // Apply colors to any span created
-            setTimeout(() => {
-                const letterColors = currentScrambledColors.filter((c, idx) => originalNameText[idx] !== ' ');
-                el.querySelectorAll('span').forEach((span, i) => {
-                    span.style.color = letterColors[i % letterColors.length];
-                });
-            }, 50);
-
-            const rect = el.getBoundingClientRect();
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: {
-                    x: (rect.left + rect.width / 2) / window.innerWidth,
-                    y: (rect.top + rect.height / 2) / window.innerHeight
-                }
+            const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FF4500', '#32CD32', '#1E90FF', '#FFD700', '#8A2BE2', '#FF69B4'];
+            el.querySelectorAll('.name-letter').forEach((span, i) => {
+                span.style.color = colors[Math.floor(Math.random() * colors.length)];
+                span.style.animation = 'none';
+                void span.offsetWidth; // restart the wave from the top each click
+                span.style.animation = `nameWave 0.6s ease-in-out ${(i * 0.06).toFixed(2)}s`;
             });
-            setTimeout(() => {
-                el.style.animation = '';
-                el.innerHTML = getWiggledNameHTML();
-            }, 3000);
+
+            if (window.confetti) {
+                const rect = el.getBoundingClientRect();
+                confetti({
+                    particleCount: 120,
+                    spread: 70,
+                    origin: {
+                        x: (rect.left + rect.width / 2) / window.innerWidth,
+                        y: (rect.top + rect.height / 2) / window.innerHeight
+                    }
+                });
+            }
         }
 
         const subtitleRoles = ["COPYWRITER", "/SCREENWRITER", "/AUTHOR", "/DATA ANALYST", "/PODCASTER", "/STAND-UP COMEDIAN", "/AMATEUR CHEF", "/STAR OF ST. ROSE ELEMENTARY'S 2017 SMASH-HIT, SOLD-OUT PRODUCTION \"ANNIE JR\"", "/FUTURE SEXIEST MAN ALIVE", "/LIFE OF THE PARTY", "/NOT YOUR AVERAGE JOE"];
